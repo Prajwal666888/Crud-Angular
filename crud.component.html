@@ -1,0 +1,155 @@
+<div *ngIf="flag==1" class="container  mt-4 text-center border border-dark rounded">
+    <h6 class="display-5">Welcome!</h6>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Salary</th>
+                <th>Modify</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let e of employees index as i">
+                <td>{{e.id}}</td>
+                <td>{{e.name}}</td>
+                <td>{{e.age}}</td>
+                <td>{{e.salary| currency:'USD'}}</td>
+                <td><button class="btn btn-outline-primary" (click)="getEmployee(e.id)">Modify</button></td>
+                <td><button class="btn btn-outline-danger" (click)="deleteEmployee(e.id)">Delete</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-outline-primary m-2 text-center" (click)="disp()">Add</button>
+    <button class="btn btn-outline-warning m-2 text-center font-weight-bolder" (click)="retr()">Retrive</button>
+    <button class="btn btn-outline-danger m-2 font-weight-bolder" (click)="counter()">Counter</button>
+    <button class="btn btn-outline-success" (click)="getSorted()">Sorted</button>
+    <button class="btn btn-outline-secondary m-2" (click)="getSortData()">Sorted Pagin</button>
+
+</div>
+<div *ngIf="flag==2" class="container justify-content-center mt-4  border border-dark rounded">
+    <form class="form text-center" [formGroup]="employ" (ngSubmit)="onSubmit(employ.value)">
+        <legend class="display-5">Modify</legend>
+
+        <div class="form-group">
+            <label for="id">Id:</label>
+            <input type="text" readonly formControlName="id" [value]="employee.id" name="id" [disabled]="true" [(ngModel)]="employee.id"
+                class="form-control text-center">
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" name="name" class="form-control text-center" formControlName="name" [value]="employee.name" [(ngModel)]="employee.name">
+                <small class="text text-danger" *ngIf="em?.['name']?.touched && em?.['name']?.invalid">
+                    <small *ngIf="em?.['name']?.errors?.['required']">Name is required</small>
+                    <small *ngIf="em?.['name']?.errors?.['maxlength']">Name has a maximum length of {{employ.errors?.['name']?.['maxlength'].requiredlength}}</small>
+                    <small *ngIf="em?.['name']?.errors?.['minlength']">Name has a min length of {{name?.errors?.['minlength']?.requiredLength}}</small>
+                </small>
+        </div>
+        <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="text" name="age" class="form-control text-center" formControlName="age" [value]="employee.age" [(ngModel)]="employee.age">
+            <small class="text text-danger" *ngIf="em?.['age']?.touched && em?.['age']?.invalid">
+                <small *ngIf="em?.['age']?.errors?.['required']">Age is required</small>
+                <small *ngIf="em?.['age']?.errors?.['pattern']">Age can only contain digits</small>
+            </small>
+        </div>
+        <div class="form-group mb-3">
+            <label for="salary">Salary:</label>
+            <input type="text" name="salary" class="form-control text-center" formControlName="salary" [(ngModel)]="employee.salary"
+                 [value]="employee.salary">
+                 <small class="text text-danger" *ngIf="em?.['salary']?.touched && em?.['salary']?.invalid">
+                    <small *ngIf="em?.['salary']?.errors?.['required']">Salary is required</small>
+                    <small *ngIf="em?.['salary']?.errors?.['pattern']">Salary can only contain digits</small>
+                 </small>
+        </div>
+        <button class="btn btn-outline-primary text-center mb-3" [disabled]="employ.invalid">Modify</button>
+    </form>
+    <button class="btn btn-outline-warning text-right" (click)="back()">Back</button>
+
+</div>
+
+<div *ngIf="flag==3" class="container justify-content-center mt-4  border border-dark rounded">
+    <form class="form text-center" #form="ngForm" (ngSubmit)="addEmployee(form.value)">
+        <legend class="display-5">Sign-up</legend>
+
+        <div class="form-group">
+            <label for=""></label>
+            <input type="text" name="name" class="form-control text-center" placeholder="Name" ngModel #name="ngModel">
+        </div>
+        <div class="form-group mt-2">
+            <label for=""></label>
+            <input type="text" name="age" class="form-control text-center" placeholder="age" ngModel #age="ngModel">
+        </div>
+        <div class="form-group mb-3 ">
+            <label for=""></label>
+            <input type="text" name="salary" class="form-control text-center" placeholder="salary" ngModel
+                #salary="ngModel">
+        </div>
+        <button class="btn btn-outline-primary mb-3" [disabled]="form.invalid">Submit</button>
+
+
+    </form>
+    <button class="btn btn-outline-warning text-right" (click)="back()">Back</button>
+</div>
+
+<div *ngIf="flag==4" class="container text-center mt-4 border border-dark rounded">
+    <h6 class="display-5">Retrive</h6>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let r of retri index as i">
+                <td>{{r.id}}</td>
+                <td>{{r.name}}</td>
+                <td>{{r.age}}</td>
+                <td>{{r.salary}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-warning" (click)="back()">Back</button>
+</div>
+
+<div *ngIf="flag==5" class="container text-center mt-4 border border-dark rounded">
+    <h6 class="display-5">Counter</h6>
+    <p>{{count}}</p>
+    <button class=" m-2 btn btn-outline-primary" #inc value="inc" (click)="counts(inc.value)">Increment</button>
+    <button class="btn btn-outline-warning m-2" #dec value="dec" (click)="counts(dec.value)">Decrement</button>
+    <button class="btn btn-outline-secondary m-2" #res value="res" (click)="counts(res.value)">Reset</button>
+    <button class="btn btn-outline-info m-2" (click)="back()">Back</button>
+</div>
+
+<div *ngIf="flag==6" class="container justify-content-center mt-4 text-center border border-dark rounded">
+    <h6 class="display-5">Welcome to Sorted</h6>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Age</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+            <tbody>
+                <tr *ngFor="let empo of employees">
+                    <td>{{empo.id}}</td>
+                    <td>{{empo.name}}</td>
+                    <td>{{empo.age}}</td>
+                    <td>{{empo.salary}}</td>
+                </tr>
+            </tbody>
+    </table>
+   <div class="container">
+    <pagination-controls>
+        (click)="eventBind($event)"
+    </pagination-controls>
+   </div>
+    <button class="btn btn-outline-warning m-2" (click)="back()">back</button>
+</div>
